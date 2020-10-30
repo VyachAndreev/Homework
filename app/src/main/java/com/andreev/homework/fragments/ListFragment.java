@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
@@ -76,7 +77,8 @@ public class ListFragment extends Fragment {
             data.add(Integer.toString(i));
         }
         final RecyclerView recyclerView = view.findViewById(R.id.recycler);
-        recyclerView.setAdapter(new ItemAdapter(data, new ItemClickHandler()));
+        final ItemAdapter adapter = new ItemAdapter(data, new ItemClickHandler());
+        recyclerView.setAdapter(adapter);
         Configuration configuration = getContext().getResources().getConfiguration();
         if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT){
             recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 3));
@@ -89,7 +91,7 @@ public class ListFragment extends Fragment {
             public void onClick(View view) {
                 data.add(Integer.toString(data.size() + 1));
                 max++;
-                recyclerView.setAdapter(new ItemAdapter(data, new ItemClickHandler()));
+                adapter.notifyItemInserted(data.size() - 1);
             }
         });
     }
