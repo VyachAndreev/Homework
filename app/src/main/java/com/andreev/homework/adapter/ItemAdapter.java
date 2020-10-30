@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.andreev.homework.MainActivity;
 import com.andreev.homework.R;
 
 import java.util.List;
@@ -36,15 +35,15 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemViewHolder> {
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         holder.textView.setText(data.get(position));
         if (position % 2 == 0) {
-            holder.textView.setTextColor(Color.parseColor("#0000FF"));
+            holder.textView.setTextColor(Color.BLUE);
         } else {
-            holder.textView.setTextColor(Color.parseColor("#FF0000"));
+            holder.textView.setTextColor(Color.RED);
         }
 
     }
 
     @Override
     public int getItemCount() {
-        return MainActivity.data.size();
+        return data.size();
     }
 }

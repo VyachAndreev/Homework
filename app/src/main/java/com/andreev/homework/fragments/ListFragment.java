@@ -19,10 +19,26 @@ import com.andreev.homework.R;
 import com.andreev.homework.adapter.ItemAdapter;
 import com.andreev.homework.adapter.ItemViewHolder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ListFragment extends Fragment {
 
+    private static final String EXTRAS_DATA = "DATA";
+    private List<String> data = new ArrayList<>();
+
+    public static ListFragment newInstance(int data) {
+        final Bundle extras = new Bundle();
+        extras.putInt(EXTRAS_DATA, data);
+
+        final ListFragment fragment = new ListFragment();
+        fragment.setArguments(extras);
+
+        return fragment;
+    }
+
     public interface IListener {
-        public void onItemClicked(int item);
+        void onItemClicked(int item);
     }
 
     protected IListener listener;
@@ -53,8 +69,21 @@ public class ListFragment extends Fragment {
 
         Button addButton = view.findViewById(R.id.add_button);
 
+        final int max;
+
+        if (getArguments() != null){
+            max = getArguments().getInt(EXTRAS_DATA);
+        } else{
+            max = MainActivity.MAX_DEFAULT;
+        }
+
+        data.clear();
+
+        for (int i = 1; i <= max; i++) {
+            data.add(Integer.toString(i));
+        }
         final RecyclerView recyclerView = view.findViewById(R.id.recycler);
-        recyclerView.setAdapter(new ItemAdapter(MainActivity.data, new ItemClickHandler()));
+        recyclerView.setAdapter(new ItemAdapter(data, new ItemClickHandler()));
         Configuration configuration = getContext().getResources().getConfiguration();
         if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT){
             recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 3));
@@ -65,8 +94,8 @@ public class ListFragment extends Fragment {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MainActivity.data.add(Integer.toString(MainActivity.data.size() + 1));
-                recyclerView.setAdapter(new ItemAdapter(MainActivity.data, new ItemClickHandler()));
+                data.add(Integer.toString(data.size() + 1));
+                recyclerView.setAdapter(new ItemAdapter(data, new ItemClickHandler()));
             }
         });
     }
