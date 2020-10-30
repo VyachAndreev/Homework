@@ -1,5 +1,4 @@
 package com.andreev.homework.fragments;
-import com.andreev.homework.MainActivity;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -16,8 +15,7 @@ import androidx.fragment.app.Fragment;
 import com.andreev.homework.R;
 
 public class DetailsFragment extends Fragment {
-    private Button backButton;
-    private TextView textView;
+
     private static final String EXTRAS_DATA = "DATA";
 
     public static DetailsFragment newInstance(int data) {
@@ -46,21 +44,21 @@ public class DetailsFragment extends Fragment {
 
         if (getArguments() != null) {
             int detail = getArguments().getInt(EXTRAS_DATA);
-            backButton = view.findViewById(R.id.button_back);
-            textView = view.findViewById(R.id.name);
+            TextView textView = view.findViewById(R.id.name);
             textView.setText(Integer.toString(detail));
             if (detail % 2 == 0) {
                 textView.setTextColor(Color.RED);
             } else {
                 textView.setTextColor(Color.BLUE);
             }
-        }
 
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().getSupportFragmentManager().popBackStack();
-            }
-        });
+            Button backButton = view.findViewById(R.id.button_back);
+            backButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getActivity().onBackPressed();
+                }
+            });
+        }
     }
 }

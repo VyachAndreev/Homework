@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.andreev.homework.MainActivity;
 import com.andreev.homework.R;
 import com.andreev.homework.adapter.ItemAdapter;
 import com.andreev.homework.adapter.ItemViewHolder;
@@ -24,18 +23,10 @@ import java.util.List;
 
 public class ListFragment extends Fragment {
 
+    private static final int MAX = 100;
+    private int max;
     private static final String EXTRAS_DATA = "DATA";
     private List<String> data = new ArrayList<>();
-
-    public static ListFragment newInstance(int data) {
-        final Bundle extras = new Bundle();
-        extras.putInt(EXTRAS_DATA, data);
-
-        final ListFragment fragment = new ListFragment();
-        fragment.setArguments(extras);
-
-        return fragment;
-    }
 
     public interface IListener {
         void onItemClicked(int item);
@@ -49,6 +40,16 @@ public class ListFragment extends Fragment {
 
         if (requireActivity() instanceof IListener) {
             listener = (IListener) requireActivity();
+        }
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            max = savedInstanceState.getInt(EXTRAS_DATA);
+        } else {
+            max = MAX;
         }
     }
 
@@ -69,14 +70,6 @@ public class ListFragment extends Fragment {
 
         Button addButton = view.findViewById(R.id.add_button);
 
-        final int max;
-
-        if (getArguments() != null){
-            max = getArguments().getInt(EXTRAS_DATA);
-        } else{
-            max = MainActivity.MAX_DEFAULT;
-        }
-
         data.clear();
 
         for (int i = 1; i <= max; i++) {
@@ -95,9 +88,16 @@ public class ListFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 data.add(Integer.toString(data.size() + 1));
+                max++;
                 recyclerView.setAdapter(new ItemAdapter(data, new ItemClickHandler()));
             }
         });
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(EXTRAS_DATA, max);
     }
 
     @Override
